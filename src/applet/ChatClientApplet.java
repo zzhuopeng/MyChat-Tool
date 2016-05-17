@@ -40,7 +40,7 @@ public class ChatClientApplet extends Applet implements Runnable {
 			Socket m_socket;
 			// 屏幕显示服务器IP地址、通讯协议
 			System.out.println("服务器:" + inetaddr + " " + url.getHost() + " " + url.getProtocol());
-			m_socket = new Socket(inetaddr, 8000); // 创建与服务器IP地址连接的套接口
+			m_socket = new Socket(inetaddr, 8080); // 创建与服务器IP地址连接的套接口
 			// 在套接口上建立输入流
 			m_in = new DataInputStream(m_socket.getInputStream());
 			// 在套接口上建立输出流
