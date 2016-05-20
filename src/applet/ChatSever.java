@@ -19,7 +19,7 @@ public class ChatSever {
         System.out.println("服务器已启动，正在等待客户的请求...");
         try
         {
-            //设置Server监听端口号为8000, 这个数字必须
+            //设置Server监听端口号为8080, 这个数字必须
             //和程序ChatClient中的port参数一致。
             socket=new ServerSocket(8080);
         }
@@ -58,7 +58,6 @@ public class ChatSever {
         {
             System.out.println("服务器已关闭...");
         }
-
     }
 }
 /*

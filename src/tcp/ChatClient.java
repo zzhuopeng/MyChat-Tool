@@ -1,3 +1,4 @@
+//http://blog.csdn.net/jia20003/article/details/8195226
 package tcp;
 
 import java.awt.BorderLayout;
@@ -59,7 +60,10 @@ public class ChatClient extends JFrame implements ActionListener {
 	private Socket mSocket;
 	private SocketAddress address;
 	private ChatClientThread m_client;
-
+	
+	/**
+	 * Note:ChatClient类的构造方法。初始化一个相应的类时，就会同时调用此方法。
+	 */
 	public ChatClient() {
 		super("Chat Client");
 		initComponents();
@@ -144,7 +148,7 @@ public class ChatClient extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Note：开始按键的监听事件。
+	 * Note：开始按键的监听事件。this表示为当前类中的Button添加监听事件。
 	 */
 	private void setupListener() {
 		connectBtn.addActionListener(this);
@@ -208,6 +212,7 @@ public class ChatClient extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		ChatClient client = new ChatClient();
 		client.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//调整此窗口的大小，以适合其子组件的首选大小和布局。
 		client.pack();
 		client.setVisible(true);
 	}

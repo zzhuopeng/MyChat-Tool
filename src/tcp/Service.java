@@ -1,3 +1,4 @@
+//http://blog.csdn.net/jia20003/article/details/8195226
 package tcp;
 
 import java.io.DataOutputStream;
@@ -7,33 +8,51 @@ import java.net.Socket;
 
 public class Service extends Thread {
 	private ServerSocket serverSocket;
-	
+
 	/**
 	 * Note：HelloSevice类构造函数，port为服务器监听端口号。
 	 */
 	public Service(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 	}
-	
+
 	/**
 	 * Note:Thread子类在执行start()方法的时候，自动运行类中的run方法。
 	 */
 	public void run() {
+		System.out.println("start user = " + userName);
 		try {
+			DataInputStream bufferedReader = new DataInputStream(userSocket.getInputStream());
+			byte[] cbuff = new byte[256];
+			char[] tbuff = new char[256];
+			int size = 0;
+			int byteCount = 0;
+			int length = 0;
 			while (true) {
-				System.out.println("服务器已经启动，服务器监听端口为：" + serverSocket.getLocalPort() + "\n等待连接......");
-				//accep()方法，等待客户端socket连接，此方法会堵塞线程。
-				Socket client = serverSocket.accept();
-				System.out.println("已经连接" + client.getRemoteSocketAddress());//Remote远程的。
-				DataOutputStream dataOS = new DataOutputStream(client.getOutputStream());
-				byte[] hello = "Hello, Java Socket".getBytes();
-				dataOS.write(hello, 0, hello.length);
-				dataOS.close();
-				client.close();
+				if ((size = bufferedReader.read(cbuff)) > 0) {
+					char[] temp = convertByteToChar(cbuff, size);
+					length = temp.length;
+					if ((length + byteCount) > 256) {
+						length = 256 - byteCount;
+					}
+					System.arraycopy(temp, 0, tbuff, byteCount, length);
+					byteCount += size;
+					if (String.valueOf(tbuff).indexOf(ChatServer.END_FLAG) > 0) {
+						String receivedContent = String.valueOf(tbuff);
+						int endFlag = receivedContent.indexOf(ChatServer.END_FLAG);
+						receivedContent = receivedContent.substring(0, endFlag);
+						String[] keyValue = receivedContent.split("#");
+						if (keyValue.length > 1) {
+							server.dispatchMessage(keyValue, userName);
+						}
+						byteCount = 0;
+						clearTempBuffer(tbuff);
+					}
+				}
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.out.println("服务器run方法出现异常！");
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -46,8 +65,7 @@ public class Service extends Thread {
 			service.start();
 		} catch (IOException e) {
 			System.out.println("创建服务器出现异常！");
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 }
-	
